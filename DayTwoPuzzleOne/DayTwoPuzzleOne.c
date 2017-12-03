@@ -6,47 +6,100 @@ char * readFile(char* fileName);
 
 void main(int arc, char* args)
 {
-	char* input = readFile("RealInput.txt");
+	char* input = readFile("TestInput.txt");
 
+	int* numbers = NULL;
+	int numberOfNumbers = 0;
 
-	int index = 0;
-	int number = 0;
-	int max = 0;
-	int min = 0;
+	int currentNumber = 0;
+
 	int sum = 0;
 
-	while(*(input + index) != 0)
+	for (size_t i = 0; i < strlen(input); i++)
 	{
-		char c = *(input + index);
+		char currentChar = *(input + i);
 
-		if (c >= 48 && c <= 57)
+		if (currentChar >= 48 && currentChar <= 57)
 		{
-			number *= 10;
-			number += c - 48;
+			currentNumber *= 10;
+			currentNumber += currentChar - 48;
 		}
 		else
 		{
-			min = (min > number) || (min == 0) ? number : min;
-			max = (max < number) ? number : max;
-			number = 0;
-		}
-		
-		if (c == 10)
-		{
-			printf("%d\n", (max - min));
-			sum += (max - min);
-			max = 0;
-			min = 0;
-			number = 0;
+			numberOfNumbers++;
+
+			numbers = realloc(numbers, numberOfNumbers * sizeof(int));
+			*(numbers + (numberOfNumbers - 1)) = currentNumber;
+
+			currentNumber = 0;
 		}
 
-		index++;
+
+
+		if (currentChar == 10)
+		{
+
+			for (int i = 0; i < numberOfNumbers; i++)
+				printf("%d ", *(numbers + i));
+
+			printf("\n");
+
+			int* min = NULL;
+			int* max = NULL;
+
+			for (int i = 0; i < numberOfNumbers; i++)
+			{
+				int number = *(numbers + i);
+
+				if (min == NULL)
+				{
+					min = malloc(sizeof(int));
+					*(min) = number;
+				}
+				else if (*(min) > number)
+				{
+					*(min) = number;
+				}
+
+				if (max == NULL)
+				{
+					max = malloc(sizeof(int));
+					*(max) = number;
+				}
+				else if (*(max) < number)
+				{
+					*(max) = number;
+				}
+			}
+
+			printf("Min: %d\n", *(min));
+			printf("Max: %d\n", *(max));
+			printf("\n");
+
+			sum += *(max)-*(min);
+
+			numbers = NULL;
+			min = NULL;
+			max = NULL;
+			numberOfNumbers = 0;
+		}
 	}
 
-	printf("Sum %d", sum);
-
+	printf("Answer: %d\n", sum);
 	getchar();
+}
 
+int numOfChar(char* buffer, char token)
+{
+	int count = 0;
+
+	for (size_t i = 0; i < (int)strlen(buffer); i++)
+	{
+		if (*(buffer + i) == token)
+			count++;
+	}
+
+	return count;
 }
 
 char * readFile(char* fileName)
@@ -72,7 +125,7 @@ char * readFile(char* fileName)
 		index++;
 	}
 
-	*(buffer + index) = 0;
+	*(buffer + index) = '\0';
 
 	fclose(fp);
 
