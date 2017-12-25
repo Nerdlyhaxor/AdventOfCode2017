@@ -5,7 +5,7 @@ def processLine(line):
 
     for word in words:
         newWord = "".join(sorted(list(word)));        
-        if word in passPhrases:
+        if newWord in passPhrases:
             passPhrases[newWord] += 1;
         else:
             passPhrases[newWord] = 0;
@@ -20,18 +20,16 @@ def processLine(line):
     
 
 def main():
-    file = open("./DayFour/DayFourPartTwoTest.txt");
+    # file = open("./DayFour/DayFourPartTwoTest.txt");
+    file = open("./DayFour/DayFourPartTwoInput.txt");
 
     validPassPhrases = 0;
 
     for line in file:
         if(processLine(line)):
-            print(line, " - Valid!");
-        else:
-            print(line, " - Not Valid!");
-            # validPassPhrases += 1;
+            validPassPhrases += 1;
 
-    # print(validPassPhrases);
+    print(validPassPhrases);
 
 if __name__ == '__main__':
     main();
